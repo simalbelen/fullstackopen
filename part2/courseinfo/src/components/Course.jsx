@@ -3,7 +3,6 @@ const Header = ({ course }) => <h1>{course.name}</h1>;
 const Part = ({ title, exercise }) => <p> {title} {exercise} </p>
 
 const Content = ({ parts }) => {
-
   return (
     <>
       {parts.map((part) => (
