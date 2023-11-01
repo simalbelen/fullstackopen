@@ -1,8 +1,12 @@
-const Contact = ({ name, number }) => (
-    <span>
-      {" "}
-      {name} {number}{" "}
-    </span>
-  );
+const Contact = ({ id, name, number, handleDelete }) => {
+  const handleClick = () => {
+    handleDelete(id, name)
+  }
 
-export default Contact
+  return (
+  <span>
+    {name} {number} <button onClick={handleClick}> delete </button>
+  </span>);
+}
+
+export default Contact;

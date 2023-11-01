@@ -4,7 +4,8 @@ import PersonForm from "./components/PersonForm";
 import Persons from "./components/Persons";
 import Title from "./components/Title";
 import { useEffect } from "react";
-import axios from 'axios'
+import personService from "./services/persons";
+import Notification from "./components/Notification";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
@@ -12,15 +13,17 @@ const App = () => {
   const [newNumber, setNewNumber] = useState("");
   const [newFilter, setNewFilter] = useState("");
   const [filteredPersons, setFilteredPersons] = useState(persons);
+  const [errorMessage, setErrorMessage] = useState(null)
+  const [errorType, setErrorType] = useState(null)
 
+  // Carga los contactos al iniciar la app
   useEffect(() => {
-    axios
-      .get('http://localhost:3001/persons')
-      .then(response => {
-        setPersons(response.data)
-      })
-  }, [])
+    personService.getAll().then((response) => {
+      setPersons(response.data);
+    });
+  }, []);
 
+  //Se actualiza la lista de contactps al aplicar un filtro o al modificar la lista de personas
   useEffect(() => {
     if (newFilter === "") {
       setFilteredPersons(persons);
@@ -32,20 +35,57 @@ const App = () => {
     }
   }, [persons, newFilter]);
 
-  const handleClick = (event) => {
+  // Crea una nueva persona
+  const handleAdd = (event) => {
     event.preventDefault();
     if (newName === "") {
       alert(`You need to write a name to continue`);
     } else if (persons.some((person) => person.name === newName)) {
-      alert(`${newName} is already added to phonebook`);
+      handleEditNumber(newName, newNumber)
     } else {
       const newPerson = {
         name: newName,
         number: newNumber,
       };
-      setPersons(persons.concat(newPerson));
-      setNewName("");
-      setNewNumber("");
+      personService.create(newPerson).then((response) => {
+        setPersons(persons.concat(response.data));
+        handleNotification(`Added ${newName}`, "info")
+        setNewName("");
+        setNewNumber("");
+      });
+      
+    }
+  };
+
+  const handleDelete = (id, name) => {
+    if (window.confirm(`Delete ${name}?`)) {
+      personService.deleteObj(id)
+      .then((response) => {
+        const filtered = persons.filter((person) => {
+          return person.id != id
+        })
+        setPersons(filtered);
+        handleNotification(`Deleted ${name}`, "info")
+      })
+      .catch(error => {
+        handleNotification(`Information of ${name} has already been removed from the server`, "error")
+      });
+    }
+  };
+
+  const handleEditNumber = (name, newNumber) => {
+    if (window.confirm(`${name} is arleady added to phonebook, replace the old number with a new one?`)) {
+      let oldPerson = persons.find((person) => person.name === name)
+      console.log(oldPerson)
+      const changedPerson = { ...oldPerson, number: newNumber }
+      personService.update(oldPerson.id, changedPerson)
+      .then(response => {
+        setPersons(persons.map(person => person.id !== response.data.id ? person : response.data))
+        handleNotification(`Edited ${name}`, "info")
+      })
+      .catch(error => {
+        handleNotification(`Information of ${name} has already been removed from the server`, "error")
+      });
     }
   };
 
@@ -62,20 +102,29 @@ const App = () => {
     setNewFilter(event.target.value);
   };
 
+  const handleNotification = (text, type) => {
+    setErrorType(type)
+    setErrorMessage(text)
+    setTimeout(function() {
+      setErrorMessage(null)
+    }, 2000);
+  }
+
   return (
     <div>
-      <Title text={"Phonebook"}/>
+      <Notification message={errorMessage} type={errorType}/>
+      <Title text={"Phonebook"} />
       <Filter newFilter={newFilter} handleFilterChange={handleFilterChange} />
-      <Title text={"Add a new"}/>
+      <Title text={"Add a new"} />
       <PersonForm
         newName={newName}
         handleNameChange={handleNameChange}
         newNumber={newNumber}
         handleNumberChange={handleNumberChange}
-        handleClick={handleClick}
+        handleAdd={handleAdd}
       />
-      <Title text={"Numbers"}/>
-      <Persons filteredPersons={filteredPersons} />
+      <Title text={"Numbers"} />
+      <Persons filteredPersons={filteredPersons} handleDelete={handleDelete} />
     </div>
   );
 };
