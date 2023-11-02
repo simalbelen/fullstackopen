@@ -3,6 +3,8 @@ const http = require("http");
 const express = require("express");
 const app = express();
 app.use(express.json()); //Necesario para leer bodys
+app.use(express.static('dist')) //Muestra el frontend compilado en dist en la ruta "/"
+
 const morgan = require("morgan");
 morgan.token('custom', (tokens, req, res) => {
     return [
