@@ -1,5 +1,3 @@
-const _ = require('lodash')
-
 const dummy = (blogs) => {
     return 1
 }
@@ -27,7 +25,9 @@ const mostBlogs = (blogs) => {
         return most_blogs
     }, {})
 
-    const obj_to_list = Object.keys(num_blogs).map((key) => {return {"author":key, "num_blogs":num_blogs[key]}})
+    const obj_to_list = Object.keys(num_blogs).map((key) => {
+        return { author: key, num_blogs: num_blogs[key] }
+    })
 
     return obj_to_list.reduce((author, el) => {
         if (el.num_blogs >= (author.num_blogs || 0)) return el
@@ -41,8 +41,10 @@ const mostLikes = (blogs) => {
         return most_likes
     }, {})
 
-    const obj_to_list = Object.keys(num_likes).map((key) => {return {"author":key, "num_likes":num_likes[key]}})
-    const aux =  obj_to_list.reduce((author, el) => {
+    const obj_to_list = Object.keys(num_likes).map((key) => {
+        return { author: key, num_likes: num_likes[key] }
+    })
+    const aux = obj_to_list.reduce((author, el) => {
         if (el.num_likes >= (author.num_likes || 0)) return el
         return author
     }, {})
@@ -54,5 +56,5 @@ module.exports = {
     totalLikes,
     favoriteBlog,
     mostBlogs,
-    mostLikes
+    mostLikes,
 }
