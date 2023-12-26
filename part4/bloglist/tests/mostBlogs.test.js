@@ -62,20 +62,20 @@ const blogs = [
     },
 ]
 
-describe('total likes', () => {
-   
-    test('Si no hay blogs, el total de likes será 0', () => {
-        const result = listHelper.totalLikes([])
-        expect(result).toBe(0)
+describe('most blogs', () => {
+
+    test('Si no hay blogs, devolverá un objeto vacio', () => {
+        const result = listHelper.mostBlogs([])
+        expect(result).toStrictEqual({})
     })
 
-    test('Si hay un solo blog, el total de likes serán los likes de ese blog', () => {
-        const result = listHelper.totalLikes(listWithOneBlog)
-        expect(result).toBe(5)
+    test('Si hay un solo blog, devolverá el autor de ese blog con "num_blogs" a 1', () => {
+        const result = listHelper.mostBlogs(listWithOneBlog)
+        expect(result).toStrictEqual({"author": "Edsger W. Dijkstra", "num_blogs": 1})
     })
 
-    test('Si hay varios blogs, el total de likes será la suma de los likes de cada uno de los blogs', () => {
-        const result = listHelper.totalLikes(blogs)
-        expect(result).toBe(36)
+    test('Si hay varios blogs, devolverá el autor que mas blogs tenga publicados, junto con el numero de blogs', () => {
+        const result = listHelper.mostBlogs(blogs)
+        expect(result).toStrictEqual({"author": "Robert C. Martin", "num_blogs": 3})
     })
 })

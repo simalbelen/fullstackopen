@@ -1,89 +1,83 @@
 const listHelper = require('../utils/list_helper')
 
+const listWithOneBlog = [
+    {
+        _id: '5a422aa71b54a676234d17f8',
+        title: 'Go To Statement Considered Harmful',
+        author: 'Edsger W. Dijkstra',
+        url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
+        likes: 5,
+        __v: 0,
+    },
+]
+
+const blogs = [
+    {
+        _id: '5a422a851b54a676234d17f7',
+        title: 'React patterns',
+        author: 'Michael Chan',
+        url: 'https://reactpatterns.com/',
+        likes: 7,
+        __v: 0,
+    },
+    {
+        _id: '5a422aa71b54a676234d17f8',
+        title: 'Go To Statement Considered Harmful',
+        author: 'Edsger W. Dijkstra',
+        url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
+        likes: 5,
+        __v: 0,
+    },
+    {
+        _id: '5a422b3a1b54a676234d17f9',
+        title: 'Canonical string reduction',
+        author: 'Edsger W. Dijkstra',
+        url: 'http://www.cs.utexas.edu/~EWD/transcriptions/EWD08xx/EWD808.html',
+        likes: 12,
+        __v: 0,
+    },
+    {
+        _id: '5a422b891b54a676234d17fa',
+        title: 'First class tests',
+        author: 'Robert C. Martin',
+        url: 'http://blog.cleancoder.com/uncle-bob/2017/05/05/TestDefinitions.htmll',
+        likes: 10,
+        __v: 0,
+    },
+    {
+        _id: '5a422ba71b54a676234d17fb',
+        title: 'TDD harms architecture',
+        author: 'Robert C. Martin',
+        url: 'http://blog.cleancoder.com/uncle-bob/2017/03/03/TDD-Harms-Architecture.html',
+        likes: 0,
+        __v: 0,
+    },
+    {
+        _id: '5a422bc61b54a676234d17fc',
+        title: 'Type wars',
+        author: 'Robert C. Martin',
+        url: 'http://blog.cleancoder.com/uncle-bob/2016/05/01/TypeWars.html',
+        likes: 2,
+        __v: 0,
+    },
+]
+
+
+
 describe('favorite blog', () => {
-    const listWithOneBlog = [
-        {
-            _id: '5a422aa71b54a676234d17f8',
-            title: 'Go To Statement Considered Harmful',
-            author: 'Edsger W. Dijkstra',
-            url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
-            likes: 5,
-            __v: 0,
-        },
-    ]
 
-    const listWithSomeBlogs = [
-        {
-            _id: '5a422aa71b54a676234d17f7',
-            title: 'Go To Statement Considered Harmful 1',
-            author: 'Edsger W. Dijkstra',
-            url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
-            likes: 2,
-            __v: 0,
-        },
-        {
-            _id: '5a422aa71b54a676234d17f8',
-            title: 'Go To Statement Considered Harmful 2',
-            author: 'Edsger W. Dijkstra',
-            url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
-            likes: 5,
-            __v: 0,
-        },
-        {
-            _id: '5a422aa71b54a676234d17f9',
-            title: 'Go To Statement Considered Harmful 3',
-            author: 'Edsger W. Dijkstra',
-            url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
-            likes: 9,
-            __v: 0,
-        },
-    ]
-
-    const listWithNegativeBlogs = [
-        {
-            _id: '5a422aa71b54a676234d17f7',
-            title: 'Go To Statement Considered Harmful 1',
-            author: 'Edsger W. Dijkstra',
-            url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
-            likes: 2,
-            __v: 0,
-        },
-        {
-            _id: '5a422aa71b54a676234d17f8',
-            title: 'Go To Statement Considered Harmful 2',
-            author: 'Edsger W. Dijkstra',
-            url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
-            likes: 5,
-            __v: 0,
-        },
-        {
-            _id: '5a422aa71b54a676234d17f9',
-            title: 'Go To Statement Considered Harmful 3',
-            author: 'Edsger W. Dijkstra',
-            url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
-            likes: -9,
-            __v: 0,
-        },
-    ]
-
-    test('when list is empty, there are 0 likes', () => {
+    test('Si no hay blogs, devuelve un objeto vacio', () => {
         const result = listHelper.favoriteBlog([])
-        expect(result).toBe(undefined)
+        expect(result).toStrictEqual({})
     })
 
-    test('when list has only one blog, equals the likes of that', () => {
+    test('Si solo hay un blog, devuelve ese elemento', () => {
         const result = listHelper.favoriteBlog(listWithOneBlog)
-        expect(result).toBe(listWithOneBlog[0])
+        expect(result).toStrictEqual(listWithOneBlog[0])
     })
 
-    test('when list has more than one blog, likes are the sum of all the blogs', () => {
-        const result = listHelper.favoriteBlog(listWithSomeBlogs)
-        expect(result).toBe(listWithSomeBlogs[2])
-    })
-
-    test('when a blog has negative likes, likes are the sum of all the blogs. It can be negative?', () => {
-        const result = listHelper.favoriteBlog(listWithNegativeBlogs)
-        console.log('RESULT', result)
-        expect(result).toStrictEqual(listWithSomeBlogs[1]) //.toBe gives an error: Object.is equality If it should pass with deep equality, replace "toBe" with "toStrictEqual"
+    test('Si hay varios blogs, devuelve el que mas likes tenga', () => {
+        const result = listHelper.favoriteBlog(blogs)
+        expect(result).toStrictEqual(blogs[2])
     })
 })
