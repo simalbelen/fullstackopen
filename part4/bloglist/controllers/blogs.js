@@ -11,23 +11,45 @@ blogsRouter.post('/', (request, response) => {
     const blog = new Blog(request.body)
 
     blog.save()
-    .then((result) => {
-        response.status(201).json(result)
-    })
-    .catch(error => response.status(400).json(error))
+        .then((result) => {
+            response.status(201).json(result)
+        })
+        .catch((error) => response.status(400).json(error))
 })
 
-// notesRouter.get('/', (request, response) => {
-//   Note.find({}).then(notes => {
-//     response.json(notes)
+blogsRouter.delete('/:id', (request, response, next) => {
+    Blog.findByIdAndDelete(request.params.id)
+        .then(() => {
+            response.status(204).end()
+        })
+        .catch((error) => next(error))
+})
+
+blogsRouter.put('/:id', (request, response, next) => {
+    const body = request.body
+
+    const blog = {
+        likes: body.likes,
+    }
+
+    Blog.findByIdAndUpdate(request.params.id, blog, { new: true })
+        .then((updatedBlog) => {
+            response.json(updatedBlog)
+        })
+        .catch((error) => next(error))
+})
+
+// blogsRouter.get('/', (request, response) => {
+//   Blog.find({}).then(blogs => {
+//     response.json(blogs)
 //   })
 // })
 
-// notesRouter.get('/:id', (request, response, next) => {
-//   Note.findById(request.params.id)
-//     .then(note => {
-//       if (note) {
-//         response.json(note)
+// blogsRouter.get('/:id', (request, response, next) => {
+//   Blog.findById(request.params.id)
+//     .then(blog => {
+//       if (blog) {
+//         response.json(blog)
 //       } else {
 //         response.status(404).end()
 //       }
@@ -35,40 +57,17 @@ blogsRouter.post('/', (request, response) => {
 //     .catch(error => next(error))
 // })
 
-// notesRouter.post('/', (request, response, next) => {
+// blogsRouter.post('/', (request, response, next) => {
 //   const body = request.body
 
-//   const note = new Note({
+//   const blog = new Blog({
 //     content: body.content,
 //     important: body.important || false,
 //   })
 
-//   note.save()
-//     .then(savedNote => {
-//       response.json(savedNote)
-//     })
-//     .catch(error => next(error))
-// })
-
-// notesRouter.delete('/:id', (request, response, next) => {
-//   Note.findByIdAndDelete(request.params.id)
-//     .then(() => {
-//       response.status(204).end()
-//     })
-//     .catch(error => next(error))
-// })
-
-// notesRouter.put('/:id', (request, response, next) => {
-//   const body = request.body
-
-//   const note = {
-//     content: body.content,
-//     important: body.important,
-//   }
-
-//   Note.findByIdAndUpdate(request.params.id, note, { new: true })
-//     .then(updatedNote => {
-//       response.json(updatedNote)
+//   blog.save()
+//     .then(savedBlog => {
+//       response.json(savedBlog)
 //     })
 //     .catch(error => next(error))
 // })
