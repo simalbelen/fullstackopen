@@ -15,7 +15,13 @@ const userSchema = new mongoose.Schema({
   password: {
     type: String,
     required: true
-  }
+  },
+  blogs: [
+    {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Blog'
+    }
+  ]
 })
 
 // Antes de guardar, aplicar el hash a la contraseña
