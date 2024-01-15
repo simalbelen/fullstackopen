@@ -27,7 +27,7 @@ app.use(middleware.requestLogger)
 app.use(middleware.tokenExtractor)
 
 // Controllers
-app.use('/api/blogs', blogsRouter)
+app.use('/api/blogs', middleware.userExtractor, blogsRouter) // Usando un middleware en una sola ruta
 app.use('/api/users', usersRouter)
 app.use('/api/login', loginRouter)
 
