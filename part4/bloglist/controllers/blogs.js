@@ -39,37 +39,4 @@ blogsRouter.put('/:id', (request, response, next) => {
         .catch((error) => next(error))
 })
 
-// blogsRouter.get('/', (request, response) => {
-//   Blog.find({}).then(blogs => {
-//     response.json(blogs)
-//   })
-// })
-
-// blogsRouter.get('/:id', (request, response, next) => {
-//   Blog.findById(request.params.id)
-//     .then(blog => {
-//       if (blog) {
-//         response.json(blog)
-//       } else {
-//         response.status(404).end()
-//       }
-//     })
-//     .catch(error => next(error))
-// })
-
-// blogsRouter.post('/', (request, response, next) => {
-//   const body = request.body
-
-//   const blog = new Blog({
-//     content: body.content,
-//     important: body.important || false,
-//   })
-
-//   blog.save()
-//     .then(savedBlog => {
-//       response.json(savedBlog)
-//     })
-//     .catch(error => next(error))
-// })
-
 module.exports = blogsRouter

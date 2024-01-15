@@ -88,7 +88,6 @@ describe('blogs api', () => {
         await api.post('/api/blogs').send(newBlog_wo_url).expect(400)
     })
 
-    // TODO Hay que acabar esto 4.13
     test('Verify that a blog can be deleted', async () => {
         const blogsAtStart = await helper.blogsInDb()
         const blogToDelete = blogsAtStart[0]
@@ -104,7 +103,7 @@ describe('blogs api', () => {
         expect(titles).not.toContain(blogToDelete.title)
     })
 
-    test.only('Verify that a blog can be updated', async () => {
+    test('Verify that a blog can be updated', async () => {
         const blogsAtStart = await helper.blogsInDb()
         const blogToUpdate = blogsAtStart[0]
         blogToUpdate.likes = 6

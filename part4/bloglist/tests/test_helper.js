@@ -51,32 +51,55 @@ const initialBlogs = [
     },
 ]
 
-const nonExistingId = async () => {
-  const blog = new Blog({ content: 'willremovethissoon' })
-  await blog.save()
-  await blog.deleteOne()
+const initialUsers = [
+    {
+        _id: '65a5797acd3a83d1a40c34cc',
+        username: 'newusername',
+        name: 'newname',
+        password:
+            '$2b$10$Vd6cJk7hwAiwgo8yLcQZZ.GRuQMVCtlxZ.2rnfMRYtXsBvSAMO9EO',
+        __v: 0,
+    },
+    {
+      _id: '65a5797acd3a83d1a40c34cd',
+      username: 'newusername2',
+      name: 'newname2',
+      password:
+          '$2b$10$Vd6cJk7hwAiwgo8yLcQZZ.GRuQMVCtlxZ.2rnfMRYtXsBvSAMO9EO',
+      __v: 0,
+  },
+]
 
-  return blog._id.toString()
+const nonExistingId = async () => {
+    const blog = new Blog({ content: 'willremovethissoon' })
+    await blog.save()
+    await blog.deleteOne()
+
+    return blog._id.toString()
 }
 
 const blogsInDb = async () => {
-  const blogs = await Blog.find({})
-  return blogs.map(blog => blog.toJSON())
+    const blogs = await Blog.find({})
+    return blogs.map((blog) => blog.toJSON())
 }
 
 const blogInDb = async (id) => {
     const blog = await Blog.findById(id)
     return blog.toJSON()
-//     .then(blog => {
-//       if (blog) {
-//         response.json(blog)
-//       } else {
-//         response.status(404).end()
-//       }
-//     })
-//     .catch(error => next(error))
-  }
+    //     .then(blog => {
+    //       if (blog) {
+    //         response.json(blog)
+    //       } else {
+    //         response.status(404).end()
+    //       }
+    //     })
+    //     .catch(error => next(error))
+}
 
 module.exports = {
-  initialBlogs, nonExistingId, blogsInDb, blogInDb
+    initialBlogs,
+    initialUsers,
+    nonExistingId,
+    blogsInDb,
+    blogInDb,
 }
