@@ -2,23 +2,54 @@ const mongoose = require('mongoose')
 const supertest = require('supertest')
 const app = require('../app')
 const Blog = require('../models/blog')
+const User = require('../models/user')
 const helper = require('./test_helper')
+const { before } = require('lodash')
 const api = supertest(app)
 const blogs = helper.initialBlogs
+const users = helper.initialUsers
+let login_info = null
 
-beforeEach(async () => {
-    await Blog.deleteMany({})
-
-    for (let blog of blogs) {
-        let blogObject = new Blog(blog)
-        await blogObject.save()
+beforeAll(async() => {
+        await User.deleteMany({})
+    
+        for (let user of users) {
+            let userObject = new User(user)
+            await userObject.save()
+        }
+    
+        login_info = await api.post('/api/login')
+        .send({
+            username: users[0].username.toString(),
+            password: users[0].password.toString()
+        });
     }
-})
+)
+
+
+
+
 
 describe('blogs api', () => {
+    beforeEach(async () => {
+        await Blog.deleteMany({})
+    
+        for (let blog of blogs) {
+            let blogObject = new Blog(blog)
+            await api.post('/api/blogs')
+            .set('Authorization', "Bearer " + login_info.body.token)
+            .send({title: blog.title,
+                author: blog.author,
+                url: blog.url,
+                likes: blog.likes
+            })
+        }
+    })
+
     test('Verify that the blog list application returns the correct amount of blog posts in the JSON format', async () => {
         const ddbb_blogs = await api
             .get('/api/blogs')
+            .set('Authorization', "Bearer " + login_info.body.token)
             .expect(200)
             .expect('Content-Type', /application\/json/)
         expect(ddbb_blogs.body.length).toEqual(blogs.length)
@@ -27,6 +58,7 @@ describe('blogs api', () => {
     test('Verify that the unique identifier property of the blog posts is named id', async () => {
         const ddbb_blogs = await api
             .get('/api/blogs')
+            .set('Authorization', "Bearer " + login_info.body.token)
             .expect(200)
             .expect('Content-Type', /application\/json/)
         expect(ddbb_blogs.body[0].id).toBeDefined()
@@ -43,10 +75,13 @@ describe('blogs api', () => {
         await api
             .post('/api/blogs')
             .send(newBlog)
+            .set('Authorization', "Bearer " + login_info.body.token)
             .expect(201)
             .expect('Content-Type', /application\/json/)
 
-        const response = await api.get('/api/blogs')
+        const response = await api
+            .get('/api/blogs')
+            .set('Authorization', "Bearer " + login_info.body.token)
 
         const titles = response.body.map((r) => r.title)
 
@@ -63,6 +98,7 @@ describe('blogs api', () => {
 
         const bbdd_newBlog = await api
             .post('/api/blogs')
+            .set('Authorization', "Bearer " + login_info.body.token)
             .send(newBlog)
             .expect(201)
             .expect('Content-Type', /application\/json/)
@@ -83,16 +119,28 @@ describe('blogs api', () => {
             likes: 2,
         }
 
-        await api.post('/api/blogs').send(newBlog_wo_title).expect(400)
+        await api
+            .post('/api/blogs')
+            .set("Accept","application/json")
+            .set('Authorization', "Bearer " + login_info.body.token)
+            .send(newBlog_wo_title)
+            .expect(400)
 
-        await api.post('/api/blogs').send(newBlog_wo_url).expect(400)
-    })
+        await api
+            .post('/api/blogs')
+            .set('Authorization', "Bearer " + login_info.body.token)
+            .send(newBlog_wo_url)
+            .expect(400)
+    }, 10000)
 
     test('Verify that a blog can be deleted', async () => {
         const blogsAtStart = await helper.blogsInDb()
         const blogToDelete = blogsAtStart[0]
 
-        await api.delete(`/api/blogs/${blogToDelete.id}`).expect(204)
+        await api
+            .delete(`/api/blogs/${blogToDelete.id}`)
+            .set('Authorization', "Bearer " + login_info.body.token)
+            .expect(204)
 
         const blogsAtEnd = await helper.blogsInDb()
 
@@ -110,6 +158,7 @@ describe('blogs api', () => {
 
         await api
             .put(`/api/blogs/${blogToUpdate.id}`)
+            .set('Authorization', "Bearer " + login_info.body.token)
             .send(blogToUpdate)
             .expect(200)
 

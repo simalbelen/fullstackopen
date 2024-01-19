@@ -56,16 +56,14 @@ const initialUsers = [
         _id: '65a5797acd3a83d1a40c34cc',
         username: 'newusername',
         name: 'newname',
-        password:
-            '$2b$10$Vd6cJk7hwAiwgo8yLcQZZ.GRuQMVCtlxZ.2rnfMRYtXsBvSAMO9EO',
+        password: '1234',
         __v: 0,
     },
     {
       _id: '65a5797acd3a83d1a40c34cd',
       username: 'newusername2',
       name: 'newname2',
-      password:
-          '$2b$10$Vd6cJk7hwAiwgo8yLcQZZ.GRuQMVCtlxZ.2rnfMRYtXsBvSAMO9EO',
+      password: '1234',
       __v: 0,
   },
 ]

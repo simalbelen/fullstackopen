@@ -7,7 +7,7 @@ const api = supertest(app)
 const users = helper.initialUsers
 
  beforeEach(async () => {
-     await User.deleteMany({})
+    await User.deleteMany({})
 
     for (let user of users) {
         let userObject = new User(user)

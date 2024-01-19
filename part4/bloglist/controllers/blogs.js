@@ -15,9 +15,10 @@ blogsRouter.get('/', async (request, response) => {
 blogsRouter.post('/', async (request, response, next) => {
     const user = request.user
     const blog = new Blog({ ...request.body, user: user.id })
-
+    if(!blog.title || !blog.url){
+		return response.status(400).json({ error: "title and url sre needed" })
+	}
     const saved_blog = await blog.save()
-
     user.blogs = user.blogs.concat(saved_blog._id)
     await user.save()
 
