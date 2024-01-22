@@ -41,6 +41,14 @@ const App = () => {
         }
     }, [persons, newFilter]);
 
+    const handleNotification = (text, type) => {
+        setErrorType(type);
+        setErrorMessage(text);
+        setTimeout(function () {
+            setErrorMessage(null);
+        }, 2000);
+    };
+
     // Crea una nueva persona
     const handleAdd = (event) => {
         event.preventDefault();
