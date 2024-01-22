@@ -21,7 +21,8 @@ const App = () => {
             {user === null ? (
                 <LoginForm setUser={setUser} />
             ) : (
-                <BlogList user={user} />
+                <BlogList user={user}
+                setUser={setUser} />
             )}
         </div>
     )
